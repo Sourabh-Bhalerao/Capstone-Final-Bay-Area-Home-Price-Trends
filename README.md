@@ -1,213 +1,128 @@
-# Bay Area Home Price Trends – Capstone Project  (Module 20 Submission)
-**Author:** Sourabh Bhalerao
+# Bay Area Home Price Trends – Capstone Project  
+**Author:** Sourabh Bhalerao  
+**Program:** Professional Certificate in Machine Learning & Artificial Intelligence  
+**Final Submission – Module 24**
 
 ---
 
 ## 📌 Executive Summary
 
-This project analyzes **housing market trends at the ZIP-code level** in the **San Francisco Bay Area** using three major data sources:  
-- **Zillow ZHVI (home value index)**  
-- **Redfin Market Tracker (local supply/demand metrics)**  
-- **Federal Reserve (macro-economic indicators)**  
+San Jose sits at the center of the Bay Area’s dynamic housing market. This project examines **how home prices vary across ZIP codes**, how they **cluster into economic segments**, and whether **machine learning models can accurately predict ZIP-level home values**.
 
-The goal is to explore the drivers of home price changes in the Bay Area and build a **baseline machine-learning model** that can predict ZHVI home values using local housing activity and macroeconomic signals.
+Using Zillow ZHVI, Redfin market activity data, and macroeconomic indicators from FRED, we:
 
-After combining and cleaning more than **100,000 monthly ZIP-level records**, I conducted exploratory data analysis (EDA), built multiple visualizations, engineered features, handled missing data, and trained a baseline **Linear Regression model**.  
-This model serves as the foundation for further modeling in Module 24.
-
----
-
-## 🎯 Rationale
-
-Bay Area housing prices significantly impact:  
-- buyers and sellers  
-- local governments  
-- investors and developers  
-- affordability planning  
-- market forecasting  
-
-Understanding the relationship between **housing supply, demand, and macro-economic factors** is important for policy, investment, and personal financial planning.
-
-This project demonstrates how open datasets can be combined to form a **multi-source analytical pipeline** capable of producing insight into one of the most dynamic real estate markets in the U.S.
+- Segmented San Jose ZIP codes into **Entry-Level**, **Mid-Market**, and **High-Price/Luxury** clusters.
+- Compared San Jose against the broader Bay Area market.
+- Built and evaluated predictive models **with** and **without** lagged price features.
+- Produced actionable recommendations for buyers, sellers, investors, and policymakers.
 
 ---
 
-## ❓ Research Question
+## 🎯 Research Question
 
-**What factors drive month-to-month home price changes in Bay Area ZIP codes, and can we build a baseline predictive model using local housing activity and macroeconomic indicators?**
+**How can machine learning models accurately predict housing prices in San Jose while uncovering distinct market segments that behave differently under changing economic and local conditions?**
 
-Sub-questions explored:
+---
 
-- Are Redfin measures (inventory, homes sold, list vs. sale price) predictive?  
-- How do macroeconomic indicators (interest rates, unemployment, CPI) relate to ZIP-level home values?  
-- Which ZIP codes show the strongest and weakest growth?  
-- Can a baseline ML model reasonably predict ZHVI home prices?
+## 🧠 Key Findings
+
+### **1. Market Segmentation**
+San Jose ZIP codes naturally fall into **three economic tiers**:
+- **Entry-Level** – lower ZHVI, higher turnover  
+- **Mid-Market** – stable, moderate pricing  
+- **High-Price / Luxury** – highest ZHVI, low supply  
+
+On a Bay Area–wide basis, San Jose mostly sits in the **mid-market and luxury ranges**, confirming its premium status within the region.
+
+---
+
+### **2. Predictive Modeling**
+We compare models **with lag (zhvi_lag1)** vs **no-lag features**:
+
+| Model Type | RMSE | R² | Notes |
+|-----------|------|------|------|
+| Linear Regression (with lag) | ~15K | 0.998–0.999 | Very strong — past prices dominate |
+| Random Forest (with lag) | ~4.8K | 0.9998 | Best forecasting performance |
+| Linear Regression (no lag) | ~213K | ~0.72 | Moderate signal |
+| Random Forest (no lag) | ~170K | ~0.82 | Better, but still limited |
+
+**Conclusion:**  
+- For **forecasting**, lagged models are extremely accurate.  
+- For **scenario analysis**, no-lag models reveal driver importance (prices, inventory, macro trends).  
 
 ---
 
 ## 📂 Data Sources
 
-### 1. **Zillow ZHVI (ZIP-level Home Value Index)**  
-- Monthly home value index for 5-digit ZIP codes  
-- Provides long-term price history  
-- Highly granular and standardized  
-
-### 2. **Redfin Zip_Code_Market_Tracker TSV**  
-Columns used after filtering:  
-- `median_sale_price`  
-- `median_list_price`  
-- `inventory`  
-- `homes_sold`  
-- `price_drops`  
-- `property_type` (kept only “All Residential”)  
-
-### 3. **FRED (Federal Reserve Economic Data)**  
-- `FEDFUNDS` – Federal Funds Rate  
-- `CPIAUCSL` – Consumer Price Index  
-- `UNRATE` – Unemployment Rate  
-
-All datasets were aligned to **month-end frequencies**, merged on ZIP and date, and cleaned to produce a combined **panel dataset** of ~105k records.
+| Source | Dataset | Description |
+|--------|---------|-------------|
+| Zillow | `zillow_zhvi_zip_long.csv` | Home Value Index (ZHVI) for all Bay Area ZIPs |
+| Redfin | `redfin_zip_monthly.csv` | Monthly inventory, sales, price metrics |
+| FRED | `fred_monthly.csv` | Interest rates, CPI, unemployment |
+| Merged Panel | `panel_zip_monthly.csv` | Final ZIP × Month dataset |
 
 ---
 
-## 🧹 Methodology
+## 🧪 Methods Used
 
-### **1. Data Cleaning**
-- Loaded Zillow (wide format → melted to long format)  
-- Chunk-loaded Redfin TSV (1.4GB) to avoid memory issues  
-- Filtered Bay Area ZIP codes (13 counties)  
-- Forward-filled and monthly-aligned FRED data  
-- Removed duplicates  
-- Removed extreme outliers (ZHVI < 50,000 or > 5,000,000)  
-- Filtered only `All Residential` property type  
-
-### **2. Feature Engineering**
-- `zhvi_lag1` (previous month ZHVI)  
-- `zhvi_pct_change_1m`  
-- `sales_inventory_ratio = homes_sold / inventory`  
-- Month-end alignment column  
-
-### **3. Exploratory Data Analysis**
-- Correlation Heatmap  
-- Price Distribution  
-- Time series trends by ZIP  
-- Scatterplots exploring supply/demand dynamics  
-- Macro indicators vs home price trends  
-
-### **4. Baseline Modeling (Module 20 requirement)**
-Model: **Linear Regression**  
-Pipeline:  
-- `SimpleImputer(strategy="median")`  
-- `LinearRegression()`  
-
-Train/Test Split: 80/20  
-Evaluation Metrics:  
-- RMSE  
-- R²  
-
----
-
-## 📊 Results
-
-### **Baseline Linear Regression (No Macro Variables)**
-- **RMSE:** ~13,586  
-- **R²:** ~1.000  
-
-Interpretation:  
-- Near-perfect R² due to strong predictive power of lagged ZHVI  
-- RMSE ~13k means typical prediction error is about ±13k on home value index  
-
-### **Baseline Model With Macro Alignment**
-After aligning FRED indicators to month-end:  
-- **RMSE:** ~36,204  
-- **R²:** ~0.997  
-
-Interpretation:  
-- Slight drop due to additional noise from macro features  
-- Still strong predictive power  
-- Model demonstrates local Redfin + macro impacts  
-
----
-
-## 🔍 Key Findings
-
-### 1. **ZHVI is strongly autocorrelated**
-Lagged home values (`zhvi_lag1`) explain most of next month’s values.
-
-### 2. **Local supply/demand metrics matter**
-Higher `sales_inventory_ratio` often correlates with stronger price growth.
-
-### 3. **Macro indicators influence trends**
-- Lower interest rates → stronger price appreciation  
-- Higher unemployment → mild cooling effect  
-- CPI inflation correlates with long-term ZHVI drift  
-
-### 4. **ZIP-level variation is large**
-- Silicon Valley ZIPs show highest median values  
-- Alameda & Contra Costa show more volatility  
-
-### 5. **Data integration is non-trivial**
-- Redfin markets multiple property types per ZIP/month  
-- Needed filtering to avoid duplicate monthly entries  
-- FRED alignment required forward-filling and month-end merging  
-
----
-
-## 🚀 Next Steps (Module 24)
-
-The full project requires additional models and refined reporting. Next steps include:
-
-### **Modeling**
-- Add Random Forest, XGBoost, Lasso, Ridge  
-- Perform GridSearchCV for hyperparameter tuning  
-- Compare multiple evaluation metrics  
-
-### **Feature Engineering**
-- Rolling-window volatility  
-- Multi-month lags  
-- Seasonality variables (month-of-year)  
-
-### **Analysis**
-- Deep-dive ZIP clusters  
-- Price elasticity with interest rates  
-- Identifying leading vs lagging indicators  
-
-### **Artifact Generation**
-- Produce final non-technical report  
-- Cleaned notebooks with polished visualizations  
-- Improve interpretability via SHAP values  
+- **Data Cleaning & Merging** (pandas)  
+- **Visualization** (Matplotlib & Seaborn)  
+- **Clustering** (K-Means, PCA visualization)  
+- **Regression Modeling**  
+  - Linear Regression  
+  - Random Forest Regressor  
+  - Ridge & Lasso (no-lag scenario)  
+- **Cross-Validation & Grid Search**  
+- **Feature Importance** & Explainability  
 
 ---
 
 ## 📁 Project Structure
-
-project/
+'''
+Bay-Area-Home-Price-Trends/
 │
 ├── data/
 │ ├── raw/
 │ │ ├── zillow_zhvi_zip.csv
 │ │ ├── zip_code_market_tracker.tsv000
-│ │ └── acs_zcta_selected.csv # Not used in Module 20
+│ │ └── acs_zcta_selected.csv # Not used in Module 20/24
 │ │
 │ └── processed/
-│ ├── zillow_zhvi_zip_long.csv # Melted Zillow dataset
-│ ├── redfin_zip_monthly.csv # Clean Redfin ZIP-level data
-│ ├── fred_monthly.csv # FRED macro indicators (aligned)
-│ └── panel_zip_monthly.csv # Final merged dataset (used in EDA + modeling)
+│ ├── zillow_zhvi_zip_long.csv
+│ ├── redfin_zip_monthly.csv
+│ ├── fred_monthly.csv
+│ └── panel_zip_monthly.csv
 │
-├── capstone_initial_report_eda.ipynb # Module 20 notebook
+├── capstone_final_analysis.ipynb # Final Notebook (Module 24)
+├── Capstone_Project_Final_Report.docx # Final written report
 ├── README.md
+└── .gitignore
+'''
 
 ---
 
-## 👉 Notebook Link
+## 🔗 GitHub Links
 
-[📘 capstone_initial_report_eda.ipynb](#)
+### **📘 Final Capstone Notebook (Module 24)**
+**https://github.com/Sourabh-Bhalerao/Capstone-Final-Bay-Area-Home-Price-Trends/blob/main/capstone_final_analysis_bay_area_home_prices.ipynb**
+
+### **📗 Module 20 Notebook (Initial EDA & Panel Construction)** - as reference
+**https://github.com/Sourabh-Bhalerao/Bay-Area-Home-Price-Trends/blob/main/capstone_initial_report_eda.ipynb**
+
+### **📄 Final Word Report**
+**https://github.com/Sourabh-Bhalerao/Capstone-Final-Bay-Area-Home-Price-Trends/blob/main/Capstone_Project_Final_Report_SB_11-16-2025**
 
 ---
 
-## 📬 Contact
-For questions or collaboration:  
-**Sourabh Bhalerao**  
+## 🚀 Next Steps
+
+- Add **school quality, zoning, demographics, commute times** to enrich ZIP clusters  
+- Explore **time-series forecasting** models (ARIMA, Prophet, LSTM)  
+- Build an **interactive dashboard** for ZIP-level housing insights  
+- Expand analysis to **forecast future price changes** (not just levels)  
+
+---
+
+**GitHub:** https://github.com/Sourabh-Bhalerao  
 
 ---

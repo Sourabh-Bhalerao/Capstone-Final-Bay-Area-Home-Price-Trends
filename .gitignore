@@ -1,8 +1,63 @@
-# Ignore raw & large data
-data/raw/
-*.tsv
-*.tsv000
-*.csv
+# ===============================
+#  Capstone Project .gitignore
+# ===============================
 
-# But keep processed (small) data if you want
-!data/processed/
+# --- Raw and large data files ---
+data/raw/
+data/raw/*
+*.zip
+*.gz
+*.tar
+*.7z
+*.parquet
+*.pickle
+
+# --- Processed large files to avoid accidental upload ---
+# (Uncomment if your processed files become too large)
+# data/processed/*.csv
+# data/processed/*.tsv
+
+# --- Notebook cache & checkpoints ---
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# --- Python cache files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- System files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- VSCode / IDE files ---
+.vscode/
+.idea/
+*.code-workspace
+
+# --- Logs ---
+*.log
+
+# --- Temporary / working files ---
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# --- Jupyter Notebook temporary files ---
+*.nbconvert.ipynb
+
+# --- OS-specific trash directories ---
+$RECYCLE.BIN/
+.Trashes/
+
+# --- Excel temporary files ---
+~$*.xls
+~$*.xlsx
+
+# --- Misc ---
+*.orig
+*.rej
+*.backup
