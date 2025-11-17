@@ -1,0 +1,8 @@
+# Ignore raw & large data
+data/raw/
+*.tsv
+*.tsv000
+*.csv
+
+# But keep processed (small) data if you want
+!data/processed/
