@@ -78,7 +78,7 @@ We compare models **with lag (zhvi_lag1)** vs **no-lag features**:
 ---
 
 ## 📁 Project Structure
-'''
+```
 Bay-Area-Home-Price-Trends/
 │
 ├── data/
@@ -97,7 +97,7 @@ Bay-Area-Home-Price-Trends/
 ├── Capstone_Project_Final_Report.docx # Final written report
 ├── README.md
 └── .gitignore
-'''
+```
 
 ---
 
