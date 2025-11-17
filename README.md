@@ -137,7 +137,7 @@ data/raw/
 **https://github.com/Sourabh-Bhalerao/Bay-Area-Home-Price-Trends/blob/main/capstone_initial_report_eda.ipynb**
 
 ### **📄 Final Word Report**
-**https://github.com/Sourabh-Bhalerao/Capstone-Final-Bay-Area-Home-Price-Trends/blob/main/Capstone_Project_Final_Report_SB_11-16-2025**
+**https://github.com/Sourabh-Bhalerao/Capstone-Final-Bay-Area-Home-Price-Trends/blob/main/Capstone_Project_Final_Report_SB_11-16-2025.docx**
 
 ---
 
