@@ -84,21 +84,48 @@ Bay-Area-Home-Price-Trends/
 ├── data/
 │ ├── raw/
 │ │ ├── zillow_zhvi_zip.csv
-│ │ ├── zip_code_market_tracker.tsv000
-│ │ └── acs_zcta_selected.csv # Not used in Module 20/24
+│ │ └── zip_code_market_tracker.tsv000
 │ │
 │ └── processed/
-│ ├── zillow_zhvi_zip_long.csv
-│ ├── redfin_zip_monthly.csv
-│ ├── fred_monthly.csv
-│ └── panel_zip_monthly.csv
+│ ├── zillow_zhvi_zip_long.csv  # Melted long-form Zillow data
+│ ├── redfin_zip_monthly.csv    # Cleaned Redfin ZIP-level monthly metrics
+│ ├── fred_monthly.csv          # Monthly macroeconomic data from FRED
+│ └── panel_zip_monthly.csv     # Final merged panel dataset (used for EDA + modeling)
 │
-├── capstone_final_analysis.ipynb # Final Notebook (Module 24)
-├── Capstone_Project_Final_Report.docx # Final written report
+├── capstone_final_analysis.ipynb       # Final Notebook (Module 24)
+├── Capstone_Project_Final_Report.docx  # Final written report
 ├── README.md
-└── .gitignore
+└── .gitignore					# Ensures raw data not uploaded to GitHub
 ```
+## Why Raw Data Is Not Included in the Repository
 
+The `/data/raw/` folder contains very large proprietary datasets such as:
+
+- `zip_code_market_tracker.tsv000` (≈1.4 GB Redfin data)
+- `zillow_zhvi_zip.csv`
+- `acs_zcta_selected.csv`
+
+These files are **too large for GitHub** and exceed the platform's file-size limits.  
+Additionally, some datasets (e.g., Redfin) have redistribution restrictions.
+
+For these reasons:
+
+✔ Raw data is **excluded using `.gitignore`**  
+✔ Only **processed, lightweight CSVs** (safe and <100 MB) are included  
+✔ The README clearly explains how to recreate these files for replication  
+
+## Rebuilding the Processed Data (If Needed)
+
+To reproduce the processed datasets:
+
+1. Place the raw files into:
+
+```
+data/raw/
+    ├── zillow_zhvi_zip.csv
+    ├── zip_code_market_tracker.tsv000
+```
+	
 ---
 
 ## 🔗 GitHub Links
